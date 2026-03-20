@@ -1,0 +1,46 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.pkl
+*.egg-info/
+*.egg
+*.log
+
+# --- Entornos virtuales ---
+venv/
+env/
+.venv/
+.virtualenv/
+
+# --- Configuración de herramientas ---
+.mypy_cache/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# --- Archivos temporales ---
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# --- IDEs ---
+# VSCode
+.vscode/
+# PyCharm / JetBrains
+.idea/
+
+# --- Distribución / build ---
+build/
+dist/
+*.spec
+
+# --- Sistema operativo ---
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
