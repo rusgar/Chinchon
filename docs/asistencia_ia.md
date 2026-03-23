@@ -199,3 +199,27 @@ solucioname este error, igual es porque ambos jugadores usmaron mas de 100 punto
 
 🟦 Prompt 52
 “ahora añademe los promts que te he dado siguiendo la extructura ya creada de asistencia_ia.md y el orden”
+
+🟦 Prompt 53
+“ahora quiero que cuando acabe la partida, me añadas la opcion de jugar otra partida, o dejar de jugar, si se deja de jugar quiero que me añadas un marcador de resumen, de cuantas partidas se han jugado, y la puntuacion de cada persona de las partidas que se han ganado”
+
+🟦 Prompt 54
+ahora porque me sale este error:
+Traceback (most recent call last):
+File "C:\Users\IA\Desktop\Curso\Chinchon\src\ui.py", line 192, in <module>
+menu_principal_loop()
+~~~~~~~~~~~~~~~~~~~^^
+File "C:\Users\IA\Desktop\Curso\Chinchon\src\ui.py", line 174, in menu_principal_loop
+iniciar_partida()
+~~~~~~~~~~~~~~~^^
+File "C:\Users\IA\Desktop\Curso\Chinchon\src\ui.py", line 139, in iniciar_partida
+jugador = juego.jugadores[juego.turno_actual]
+~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+IndexError: list index out of range
+PS C:\Users\IA\Desktop\Curso\Chinchon>
+
+🟦 Prompt 55
+ahora quiero que cuando acabe la partida, me añadas la opcion de jugar otra partida, o dejar de jugar, si se deja de jugar quiero que me añadas un marcador de resumen, de cuantas partidas se han jugado, y la puntuacion de cada persona de las partidas que se han ganado
+
+🟦 Prompt 56
+ahora en asistencia_ia, quiero que lo continues desde el ultimo promt hasta este ultimo que te he dado
