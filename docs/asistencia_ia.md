@@ -156,3 +156,46 @@ Lo que quiero que hagas es que cuando un jugador supere los 100 puntos, automati
 🟦 Prompt 44
 “siguiendo esta estructura y numeracion 🟦 Prompt 28
 ponmelo a partir del 29 incluido”1
+
+🟦 Prompt 45
+“y ahora porque cuando robo un comodin del mazo que esta boca abajo no se activa este comodigin”
+
+🟦 Prompt 46
+“realiza los cambios necesario en el codigo”
+
+🟦 Prompt 47
+“Puntuaciones de la ronda:
+1: +43 puntos (Total: 122)
+2: +64 puntos (Total: 139)
+Traceback (most recent call last):
+  File "C:\Users\IA\Desktop\Curso\Chinchon\src\ui.py", line 181, in <module>
+    menu_principal_loop()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\IA\Desktop\Curso\Chinchon\src\ui.py", line 163, in menu_principal_loop
+    iniciar_partida()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\IA\Desktop\Curso\Chinchon\src\ui.py", line 136, in iniciar_partida
+    resultado = juego.jugar_turno()
+  File "C:\Users\IA\Desktop\Curso\Chinchon\src\chinchon.py", line 192, in jugar_turno
+    return self._cerrar_ronda(jugador)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\IA\Desktop\Curso\Chinchon\src\chinchon.py", line 272, in _cerrar_ronda
+    ganador = min(jugadores_vivos, key=lambda x: x.puntos)
+ValueError: min() iterable argument is empty
+solucioname este error, igual es porque ambos jugadores usmaron mas de 100 puntos a la vez. usa la regla qde que si esto pasa, el que menos puntos tenga gane la ronda en el caso”
+
+🟦 Prompt 48
+“quiero que me crees un archivo test_ambos_suman100.py dentro de la carpeta tests para probar el caso de que en la misma ronda ambos suman mas de 100 puntos, se ejecute la regla de que el que menos puntos tenga gana la ronda”
+
+🟦 Prompt 49
+“ahora dime en texto, cuantos test tendrian que fallar realmente”
+
+🟦 Prompt 50
+“pero de test_ambos_suman100”
+
+🟦 Prompt 51
+“pues aqui tienes los errores que me dan, haz que pasen los que tengan que pasar, y los test que tengan que fallar si o si.
+(… errores de tests …)”
+
+🟦 Prompt 52
+“ahora añademe los promts que te he dado siguiendo la extructura ya creada de asistencia_ia.md y el orden”

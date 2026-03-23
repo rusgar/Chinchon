@@ -70,6 +70,7 @@ class ChinchonGame:
         self.colores = colores
 
         self.jugadores = [Jugador(nombre) for nombre in nombres_jugadores]
+        self.todos_jugadores = self.jugadores.copy()  # Guardar copia original para estadísticas (puntos acumulados)
         self.turno_actual = 0
 
         self._iniciar_nueva_ronda()
@@ -153,6 +154,14 @@ class ChinchonGame:
     # ============================================================
 
     def jugar_turno(self):
+        # Si no quedan jugadores, terminar
+        if len(self.jugadores) == 0:
+            return "fin"
+
+        # Asegurar que turno_actual sea válido
+        if self.turno_actual >= len(self.jugadores):
+            self.turno_actual = 0
+
         jugador = self.jugadores[self.turno_actual]
 
         # Si el jugador está eliminado → saltar turno
@@ -169,6 +178,10 @@ class ChinchonGame:
 
             # 🔥 Eliminación inmediata si el comodín lo requiere
             self.jugadores = [j for j in self.jugadores if not j.eliminado]
+
+            # Verificar si quedan jugadores
+            if len(self.jugadores) == 0:
+                return "fin"
 
             # Ajustar turno
             if self.turno_actual >= len(self.jugadores):
@@ -263,23 +276,14 @@ class ChinchonGame:
             )
 
         # ============================================================
-        # NUEVA REGLA: SI TODOS SUPERAN 100 → GANA EL DE MENOS PUNTOS
+        # DETERMINAR GANADOR O ELIMINACIONES
         # ============================================================
 
-        jugadores_vivos = [j for j in self.jugadores if not j.eliminado]
+        # Guardar lista completa antes de filtrar
+        jugadores_antes = self.jugadores.copy()
 
-        if all(j.puntos >= 100 for j in jugadores_vivos):
-            ganador = min(jugadores_vivos, key=lambda x: x.puntos)
-            self.escribir("\n⚠️ TODOS LOS JUGADORES SUPERARON 100 PUNTOS", self.colores["amarillo"])
-            self.escribir(f"🏆 GANADOR POR MENOR PUNTUACIÓN: {ganador.nombre}", self.colores["verde"])
-            return "fin"
-
-        # ============================================================
-        # ELIMINAR JUGADORES NORMALES
-        # ============================================================
-
+        # Eliminar jugadores que superaron 100 puntos
         eliminados = []
-
         for j in self.jugadores:
             if j.puntos >= 100 and not j.eliminado:
                 j.eliminado = True
@@ -290,14 +294,27 @@ class ChinchonGame:
             for e in eliminados:
                 self.escribir(f"{e.nombre} ha sido eliminado con {e.puntos} puntos.", self.colores["rojo"])
 
-        # QUITAR ELIMINADOS DE LA LISTA
+        # Filtrar jugadores vivos
         self.jugadores = [j for j in self.jugadores if not j.eliminado]
 
+        # ============================================================
+        # CASO ESPECIAL: TODOS LOS JUGADORES ELIMINADOS
+        # ============================================================
+        if len(self.jugadores) == 0:
+            # Todos fueron eliminados, gana el que tenga MENOS puntos
+            ganador = min(jugadores_antes, key=lambda x: x.puntos)
+            self.escribir("\n⚠️ TODOS LOS JUGADORES SUPERARON 100 PUNTOS", self.colores["amarillo"])
+            self.escribir(f"🏆 GANADOR POR MENOR PUNTUACIÓN: {ganador.nombre}", self.colores["verde"])
+            return "fin"
+
+        # Ajustar turno si es necesario
         if self.turno_actual >= len(self.jugadores):
             self.turno_actual = 0
 
         # SI SOLO QUEDA 1 → GANADOR REAL
         if len(self.jugadores) == 1:
+            ganador = self.jugadores[0]
+            self.escribir(f"\n🏆 GANADOR DE LA PARTIDA: {ganador.nombre}", self.colores["verde"])
             return "fin"
 
         input("\nPulsa ENTER para continuar...")
@@ -309,7 +326,14 @@ class ChinchonGame:
 
     def _formatear_carta(self, carta):
         if carta.tipo == "comodin":
-            return "🃏 JOKER"
+            # Mostrar nombre legible del comodín
+            nombres_legibles = {
+                "estrella_galicia": "🍺 Estrella Galicia",
+                "alhambra_verde": "🍀 Alhambra Verde",
+                "estrella_1906": "⭐ Estrella 1906",
+                "sin_cerveza": "☠️ SIN CERVEZA"
+            }
+            return nombres_legibles.get(carta.nombre, "🃏 JOKER")
 
         if carta.valor == 10:
             letra = "S"
