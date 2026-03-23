@@ -2,197 +2,343 @@
 
 from baraja import Baraja
 from jugador import Jugador
-from validador import detectar_escaleras, detectar_grupos, es_chinchon
+from comodines import activar_comodin
 
 
-# ---------------------------------------------------------
-# VALIDACIÓN DE MANO PARA CIERRE DE RONDA
-# ---------------------------------------------------------
+# ============================================================
+# FUNCIÓN mano_valida — DETECTA ESCALERAS, GRUPOS Y CHINCHÓN
+# ============================================================
 
 def mano_valida(cartas):
-    """
-    Comprueba si la mano puede cerrar:
-        - Es un Chinchón (7 cartas)
-        - O descartando 1 carta, el resto forma combinaciones válidas
-    """
+    normales = [c for c in cartas if c.tipo != "comodin"]
 
-    # Caso especial: Chinchón completo
-    if es_chinchon(cartas):
-        return True
+    # 1. Chinchón
+    if len(normales) == 7:
+        palo = normales[0].palo
+        valores = sorted(c.valor for c in normales)
+        if all(valores[i] + 1 == valores[i+1] for i in range(6)) and all(c.palo == palo for c in normales):
+            return True
 
-    # Probar descartar cada carta
-    for i in range(len(cartas)):
-        mano_sin = cartas[:i] + cartas[i+1:]
+    # 2. Grupos
+    def grupos_validos(cartas):
+        valores = {}
+        for c in cartas:
+            valores.setdefault(c.valor, []).append(c)
+        return [g for g in valores.values() if len(g) >= 3]
 
-        escaleras = detectar_escaleras(mano_sin)
-        grupos = detectar_grupos(mano_sin)
+    # 3. Escaleras
+    def escaleras_validas(cartas):
+        por_palo = {}
+        for c in cartas:
+            por_palo.setdefault(c.palo, []).append(c)
 
-        total = sum(len(e) for e in escaleras) + sum(len(g) for g in grupos)
+        escaleras = []
+        for palo, lista in por_palo.items():
+            lista_ordenada = sorted(lista, key=lambda x: x.valor)
+            temp = [lista_ordenada[0]]
+            for i in range(1, len(lista_ordenada)):
+                if lista_ordenada[i].valor == lista_ordenada[i-1].valor + 1:
+                    temp.append(lista_ordenada[i])
+                else:
+                    if len(temp) >= 3:
+                        escaleras.append(temp)
+                    temp = [lista_ordenada[i]]
+            if len(temp) >= 3:
+                escaleras.append(temp)
+        return escaleras
 
+    # 4. Quitar una carta y validar
+    for i in range(len(normales)):
+        mano_sin = normales[:i] + normales[i+1:]
+        grupos = grupos_validos(mano_sin)
+        escaleras = escaleras_validas(mano_sin)
+        total = sum(len(g) for g in grupos) + sum(len(e) for e in escaleras)
         if total == len(mano_sin):
             return True
 
     return False
 
 
-# ---------------------------------------------------------
+# ============================================================
 # CLASE PRINCIPAL DEL JUEGO
-# ---------------------------------------------------------
+# ============================================================
 
 class ChinchonGame:
-    """
-    Controla el flujo de la partida de Chinchón.
-    Gestiona:
-        - mazo
-        - pila de descarte
-        - turnos
-        - activación automática de comodines
-        - cierre de ronda
-    """
+    def __init__(self, nombres_jugadores, limpiar, escribir, colores):
+        self.limpiar = limpiar
+        self.escribir = escribir
+        self.colores = colores
 
-    def __init__(self, nombres_jugadores):
-        self.baraja = Baraja()
-        self.descarte = []
         self.jugadores = [Jugador(nombre) for nombre in nombres_jugadores]
         self.turno_actual = 0
 
-        # Reparto inicial
+        self._iniciar_nueva_ronda()
+
+    def _iniciar_nueva_ronda(self):
+        self.baraja = Baraja()
+        self.descarte = []
+
         manos = self.baraja.repartir(len(self.jugadores), 7)
         for jugador, mano in zip(self.jugadores, manos):
             jugador.recibir_cartas(mano)
+            jugador.puntos_ronda = 0
 
-        # Primera carta al descarte
         primera = self.baraja.robar()
         if primera:
             self.descarte.append(primera)
 
-    # ---------------------------------------------------------
-    # GESTIÓN DE MAZO Y DESCARTE
-    # ---------------------------------------------------------
+        if self.turno_actual >= len(self.jugadores):
+            self.turno_actual = 0
 
-    def _robar_del_mazo(self):
-        """Roba una carta del mazo. Si está vacío, recicla el descarte."""
-        carta = self.baraja.robar()
+    # ============================================================
+    # ROBAR DEL MAZO O DEL DESCARTE
+    # ============================================================
 
-        if carta is None:
-            print(">>> El mazo está vacío. Reciclando descarte...")
+    def _robar_carta(self, jugador):
+        self.escribir("\nOpciones de robo:", self.colores["amarillo"])
+        self.escribir("1. Robar del mazo (boca abajo)")
+        self.escribir("2. Robar del descarte (boca arriba)")
 
-            if len(self.descarte) <= 1:
-                print(">>> No hay suficientes cartas para reciclar.")
-                return None
+        if len(self.descarte) > 0:
+            carta_superior = self.descarte[-1]
+            self.escribir(f"Carta visible: {self._formatear_carta(carta_superior)}", self.colores["cian"])
+        else:
+            self.escribir("No hay cartas en el descarte.", self.colores["rojo"])
 
-            # Guardar la carta superior del descarte
-            carta_superior = self.descarte.pop()
+        while True:
+            eleccion = input("Elige opción (1 o 2): ").strip()
 
-            # Pasar el resto al mazo
-            self.baraja.cartas = self.descarte[:]
-            self.descarte = [carta_superior]
+            # ============================================================
+            # ROBAR DEL MAZO — AHORA MUESTRA LA CARTA ROBADA
+            # ============================================================
+            if eleccion == "1":
+                carta = self.baraja.robar()
+                if carta is None:
+                    self.escribir("El mazo está vacío.", self.colores["rojo"])
+                    continue
 
-            # Barajar el nuevo mazo
-            self.baraja.barajar()
+                jugador.robar_carta(carta)
 
-            # Robar ahora sí
-            carta = self.baraja.robar()
+                # 🔥 NUEVO: mostrar carta robada del mazo
+                self.escribir(
+                    f"Has robado del mazo: {self._formatear_carta(carta)}",
+                    self.colores["verde"]
+                )
 
-        return carta
+                return carta
 
-    # ---------------------------------------------------------
-    # FLUJO DE UN TURNO
-    # ---------------------------------------------------------
+            # ============================================================
+            # ROBAR DEL DESCARTE
+            # ============================================================
+            elif eleccion == "2":
+                if len(self.descarte) == 0:
+                    self.escribir("No hay carta en el descarte.", self.colores["rojo"])
+                    continue
+
+                carta = self.descarte.pop()
+                jugador.robar_carta(carta)
+
+                self.escribir(
+                    f"Has robado del descarte: {self._formatear_carta(carta)}",
+                    self.colores["verde"]
+                )
+
+                return carta
+
+            else:
+                self.escribir("Opción inválida.", self.colores["rojo"])
+
+    # ============================================================
+    # TURNO COMPLETO
+    # ============================================================
 
     def jugar_turno(self):
         jugador = self.jugadores[self.turno_actual]
-        print(f"\nTurno de {jugador.nombre}")
 
-        # 1. ROBAR
-        carta_robada = self._robar_del_mazo()
-        print(f"{jugador.nombre} roba: {carta_robada}")
-        jugador.robar_carta(carta_robada)
+        # Si el jugador está eliminado → saltar turno
+        if jugador.eliminado:
+            self.turno_actual = (self.turno_actual + 1) % len(self.jugadores)
+            return "continuar"
 
-        # 2. ACTIVAR COMODÍN AUTOMÁTICAMENTE
+        # ROBAR
+        carta_robada = self._robar_carta(jugador)
+
+        # COMODÍN — puede ELIMINAR a un jugador
         if carta_robada.tipo == "comodin":
-            self._activar_comodin(jugador, carta_robada)
+            activar_comodin(jugador, carta_robada, self.limpiar, self.escribir, self.colores)
 
-        # 3. ¿PUEDE CERRAR?
+            # 🔥 Eliminación inmediata si el comodín lo requiere
+            self.jugadores = [j for j in self.jugadores if not j.eliminado]
+
+            # Ajustar turno
+            if self.turno_actual >= len(self.jugadores):
+                self.turno_actual = 0
+
+            # Si solo queda uno → fin
+            if len(self.jugadores) == 1:
+                return "fin"
+
+        # AVISO MANO
         if mano_valida(jugador.mano):
-            print(f"  >>> {jugador.nombre} puede CERRAR la ronda")
-            self._cerrar_ronda(jugador)
-            return  # La ronda termina aquí
+            self.escribir("Tu mano es válida.", self.colores["verde"])
+        else:
+            self.escribir("Tu mano NO es válida.", self.colores["rojo"])
 
-        # 4. DESCARTAR
-        carta_descartada = self._descartar_carta(jugador)
-        self.descarte.append(carta_descartada)
-        print(f"{jugador.nombre} descarta: {carta_descartada}")
+        # CERRAR
+        self.escribir(f"{jugador.nombre}, ¿quieres cerrar la ronda?", self.colores["amarillo"])
+        opcion = input("Escribe S para cerrar, o ENTER para seguir: ").strip().lower()
 
-        # Pasar turno
+        if opcion == "s":
+            return self._cerrar_ronda(jugador)
+
+        # DESCARTAR
+        carta_descartada = self._elegir_descartar(jugador)
+
+        if carta_descartada.tipo != "comodin":
+            self.descarte.append(carta_descartada)
+
         self.turno_actual = (self.turno_actual + 1) % len(self.jugadores)
+        return "continuar"
 
-    # ---------------------------------------------------------
-    # ACTIVACIÓN DE COMODINES
-    # ---------------------------------------------------------
+    # ============================================================
+    # ELEGIR CARTA A DESCARTAR (1–8)
+    # ============================================================
 
-    def _activar_comodin(self, jugador, carta):
-        numero = carta.valor
-        jugador.uso_comodin[numero] = True
+    def _elegir_descartar(self, jugador):
+        self.escribir("\nElige qué carta descartar:", self.colores["amarillo"])
 
-        print(f"  >>> {jugador.nombre} activa el COMODÍN #{numero}")
+        for i, carta in enumerate(jugador.mano):
+            self.escribir(f"{i+1}. {self._formatear_carta(carta)}")
 
-        if numero == 1:
-            print("  Efecto: Estrella Galicia → fijar puntos a 80")
-            jugador.fijar_puntos(80)
+        while True:
+            eleccion = input("Número de carta a descartar: ").strip()
 
-        elif numero == 2:
-            print("  Efecto: Alhambra Verde → fijar puntos a 25")
-            jugador.fijar_puntos(25)
+            if eleccion.isdigit():
+                idx = int(eleccion) - 1
+                if 0 <= idx < len(jugador.mano):
+                    carta = jugador.mano[idx]
+                    jugador.descartar(carta)
+                    return carta
 
-        elif numero == 3:
-            print("  Efecto: Estrella 1906 → restar 25 puntos")
-            jugador.restar_puntos(25)
+            self.escribir("Opción inválida.", self.colores["rojo"])
 
-        elif numero == 4:
-            print("  Efecto: MUERTE → jugador eliminado")
-            jugador.eliminado = True
-
-    # ---------------------------------------------------------
-    # DECISIÓN DE JUGADA (informativa)
-    # ---------------------------------------------------------
-
-    def _decidir_jugada(self, jugador):
-        escaleras = detectar_escaleras(jugador.mano)
-        grupos = detectar_grupos(jugador.mano)
-
-        if escaleras:
-            print(f"  Escaleras detectadas: {escaleras}")
-        if grupos:
-            print(f"  Grupos detectados: {grupos}")
-
-        if es_chinchon(jugador.mano):
-            print(f"  ¡{jugador.nombre} tiene CHINCHÓN!")
-
-    # ---------------------------------------------------------
-    # DESCARTAR
-    # ---------------------------------------------------------
-
-    def _descartar_carta(self, jugador):
-        """Versión básica: descarta la última carta de la mano."""
-        carta = jugador.mano[-1]
-        jugador.descartar(carta)
-        return carta
-
-    # ---------------------------------------------------------
+    # ============================================================
     # CIERRE DE RONDA
-    # ---------------------------------------------------------
+    # ============================================================
 
-    def _cerrar_ronda(self, jugador):
-        print(f"\n>>> {jugador.nombre} CIERRA LA RONDA")
+    def _cerrar_ronda(self, jugador_cierra):
+        self.limpiar()
+        self.escribir("=== RESUMEN DE LA RONDA ===", self.colores["cian"])
+        self.escribir(f"Jugador que cierra: {jugador_cierra.nombre}\n", self.colores["amarillo"])
 
-        escaleras = detectar_escaleras(jugador.mano)
-        grupos = detectar_grupos(jugador.mano)
+        # Mostrar cartas
+        self.escribir("Cartas de cada jugador:\n", self.colores["verde"])
+        for j in self.jugadores:
+            mano_str = ", ".join(self._formatear_carta(c) for c in j.mano)
+            self.escribir(f"{j.nombre}: {mano_str}", self.colores["reset"])
 
-        print("  Escaleras:", escaleras)
-        print("  Grupos:", grupos)
+        # Puntuaciones
+        self.escribir("\nPuntuaciones de la ronda:", self.colores["verde"])
 
-        if es_chinchon(jugador.mano):
-            print("  ¡CHINCHÓN!")
+        for jugador in self.jugadores:
+            if jugador.eliminado:
+                continue  # NO sumar puntos a eliminados
 
-        # Aquí luego se calcularán los puntos y se preparará la siguiente ronda
+            normales = [c for c in jugador.mano if c.tipo != "comodin"]
+
+            if len(normales) == 7:
+                valores = sorted(c.valor for c in normales)
+                if all(valores[i] + 1 == valores[i+1] for i in range(6)):
+                    puntos = -10
+                else:
+                    puntos = sum(c.valor for c in normales)
+            else:
+                puntos = sum(c.valor for c in normales)
+
+            jugador.sumar_puntos_ronda(puntos)
+
+            self.escribir(
+                f"{jugador.nombre}: +{jugador.puntos_ronda} puntos (Total: {jugador.puntos})",
+                self.colores["reset"]
+            )
+
+        # ============================================================
+        # NUEVA REGLA: SI TODOS SUPERAN 100 → GANA EL DE MENOS PUNTOS
+        # ============================================================
+
+        jugadores_vivos = [j for j in self.jugadores if not j.eliminado]
+
+        if all(j.puntos >= 100 for j in jugadores_vivos):
+            ganador = min(jugadores_vivos, key=lambda x: x.puntos)
+            self.escribir("\n⚠️ TODOS LOS JUGADORES SUPERARON 100 PUNTOS", self.colores["amarillo"])
+            self.escribir(f"🏆 GANADOR POR MENOR PUNTUACIÓN: {ganador.nombre}", self.colores["verde"])
+            return "fin"
+
+        # ============================================================
+        # ELIMINAR JUGADORES NORMALES
+        # ============================================================
+
+        eliminados = []
+
+        for j in self.jugadores:
+            if j.puntos >= 100 and not j.eliminado:
+                j.eliminado = True
+                eliminados.append(j)
+
+        if eliminados:
+            self.escribir("\n=== JUGADORES ELIMINADOS ===", self.colores["rojo"])
+            for e in eliminados:
+                self.escribir(f"{e.nombre} ha sido eliminado con {e.puntos} puntos.", self.colores["rojo"])
+
+        # QUITAR ELIMINADOS DE LA LISTA
+        self.jugadores = [j for j in self.jugadores if not j.eliminado]
+
+        if self.turno_actual >= len(self.jugadores):
+            self.turno_actual = 0
+
+        # SI SOLO QUEDA 1 → GANADOR REAL
+        if len(self.jugadores) == 1:
+            return "fin"
+
+        input("\nPulsa ENTER para continuar...")
+        return "cerrado"
+
+    # ============================================================
+    # FORMATEAR CARTA
+    # ============================================================
+
+    def _formatear_carta(self, carta):
+        if carta.tipo == "comodin":
+            return "🃏 JOKER"
+
+        if carta.valor == 10:
+            letra = "S"
+        elif carta.valor == 11:
+            letra = "C"
+        elif carta.valor == 12:
+            letra = "R"
+        else:
+            letra = str(carta.valor)
+
+        emojis = {
+            "oros": "🪙",
+            "copas": "🍷",
+            "espadas": "⚔️",
+            "bastos": "🪵"
+        }
+
+        emoji = emojis.get(carta.palo, "?")
+
+        return f"{letra} {emoji}"
+
+    # ============================================================
+    # GANADOR REAL
+    # ============================================================
+
+    def detectar_ganador(self):
+        activos = [j for j in self.jugadores if not j.eliminado]
+
+        if len(activos) == 1:
+            return activos[0]
+
+        return None

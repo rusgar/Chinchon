@@ -11,12 +11,27 @@ class Carta:
         palo (str | None): 'oros', 'copas', 'espadas', 'bastos' o None si es comodín.
         valor (int): 1–7, 10–12 para cartas normales; 1–4 para comodines especiales.
         tipo (str): 'normal' o 'comodin'.
+        nombre (str | None): nombre del comodín (solo si tipo == 'comodin')
     """
 
     def __init__(self, palo, valor, tipo="normal"):
         self.palo = palo
         self.valor = valor
         self.tipo = tipo
+
+        # ============================================================
+        # AÑADIDO: nombre del comodín según su valor
+        # ============================================================
+        if tipo == "comodin":
+            nombres = {
+                1: "estrella_galicia",
+                2: "alhambra_verde",
+                3: "estrella_1906",
+                4: "sin_cerveza"
+            }
+            self.nombre = nombres.get(valor, None)
+        else:
+            self.nombre = None
 
     def __repr__(self):
         if self.tipo == "comodin":
