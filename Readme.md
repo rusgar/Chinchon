@@ -48,6 +48,95 @@ Los comodines pueden completar combinaciones.
 🃓 Chinchón
 Cerrar con las 7 cartas formando una única combinación.
 
+## 🚀 Instalación
+
+1. Clona este repositorio:
+   ```
+   git clone https://github.com/ralfy8/Chinchon
+   cd chinchon-python
+   ```
+
+2. Instala las dependencias:
+   ```
+   pip install -r requirements.txt
+   ```
+
+## 🎮 Cómo Jugar
+
+Ejecuta el juego desde la terminal:
+```
+python src/ui.py
+```
+
+El juego te guiará a través del menú principal. Puedes:
+- Iniciar una nueva partida
+- Configurar número de jugadores
+- Jugar siguiendo las reglas mostradas
+
+## 📁 Estructura del Proyecto
+
+```
+Chinchon/
+├── src/
+│   ├── game/
+│   │   ├── chinchon.py          # Lógica principal del juego
+│   │   └── chinchon_funcs/      # Funciones modulares del juego
+│   ├── model/
+│   │   ├── carta.py             # Clases Carta y Baraja
+│   │   ├── carta_funcs/         # Funciones de cartas
+│   │   ├── jugador.py           # Clase Jugador
+│   │   └── jugador_funcs/       # Funciones de jugador
+│   ├── validation/
+│   │   ├── validador.py         # Validación de manos
+│   │   └── validador_funcs/     # Funciones de validación
+│   ├── effects/
+│   │   ├── comodines.py         # Efectos de comodines
+│   │   └── animaciones.py       # Animaciones visuales
+│   └── ui.py                    # Interfaz de usuario
+├── tests/
+│   ├── test_ambos_suman100.py   # Pruebas de eliminación
+│   ├── test_comodines.py        # Pruebas de comodines
+│   └── test_partida_edge.py     # Pruebas de casos edge
+├── docs/
+│   ├── asistencia_ia.md         # Documentación de IA
+│   └── codigo_explicado.md      # Explicación del código
+├── requirements.txt             # Dependencias
+└── README.md                    # Este archivo
+```
+
+## 🧪 Pruebas
+
+Ejecuta las pruebas con pytest:
+```
+pytest tests/
+```
+
+O para ver cobertura:
+```
+pytest --cov=src tests/
+```
+
+## 📚 Documentación
+
+- [Explicación del Código](docs/codigo_explicado.md): Descripción simple de todos los archivos Python.
+- [Asistencia de IA](docs/asistencia_ia.md): Documentación del proceso de desarrollo con IA.
+
+## 🤝 Contribución
+
+1. Haz un fork del proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Haz commit de tus cambios (`git commit -am 'Añade nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo LICENSE para más detalles.
+
+---
+
+¡Disfruta jugando Chinchón con un toque cervecero! 🍻
+
 Otorga –10 puntos.
 
 🧮 Puntuación

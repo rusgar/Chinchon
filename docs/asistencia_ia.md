@@ -296,27 +296,42 @@ vale, ahora añademe una opcion, que aparezca en mitad de partida, que sea para 
 vale, ahora quiero que, en la opcion de pulsar enter para robar carta, solo puedas pulsar enter, porque si yo por ejemplo escribo "ejemplo" y le doy al enter lo reconoce, solo y no quiero que esto pase, que si hay texto o caracteres, diga opcion invalida
 
 🟦 Prompt 79
-
+Probar Chinchón completo y casos edge (mazo vacío, un solo jugador), que me lo hagas en pytest, creandome un archvo en la carpeta de tests
 
 🟦 Prompt 80
-
+ahora quiero que, me modurlacices el archivo chinchon.py, y que crees una carpeta por funcion, en la que debera de estar cada funcion, y que el juego siga funcionando correctamente
 
 🟦 Prompt 81
-
+modularizame mas el archivo chinchon, y crea mas archivos .py por las funciones, dejandome el menor codigo posible en chinchon, pero que siga funcionando perfectamente el juego
 
 🟦 Prompt 82
-
+modularizamelo aun mas
 
 🟦 Prompt 83
-
+pero, no quiero que me hagas otro archivo como has echo, quiero que hagas, un archivo para las otras demas funciones, las metas en la carpeta de chinchon_funcs
 
 🟦 Prompt 84
-
+ahora modularizame carta.py igual que hiciste con chinchon
 
 🟦 Prompt 85
-
+ahora tambien con jugador.py
 
 🟦 Prompt 86
-
+y ahora lo mismo con validador.py
 
 🟦 Prompt 87
+creame un archivo en docs, que explique el el codigo de todos los archivos .py de manera simple
+
+🟦 Prompt 88
+ahora, acabame el readme
+
+🟦 Prompt 87
+se cumple esto?: Por cada comodín no usado, el ganador recibe –5 puntos. ( me dijo que no estaba implementada, y le dije que la implementase)
+
+🟦 Prompt 89
+creame un test, solo para testear eso
+
+🟦 Prompt 90
+
+
+🟦 Prompt 91

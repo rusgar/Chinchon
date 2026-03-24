@@ -1,6 +1,12 @@
 # src/model/carta.py
 
 import random
+from model.carta_funcs.asignar_nombre_comodin import asignar_nombre_comodin
+from model.carta_funcs.formatear_carta_repr import formatear_carta_repr
+from model.carta_funcs.crear_baraja import crear_baraja
+from model.carta_funcs.barajar import barajar
+from model.carta_funcs.robar import robar
+from model.carta_funcs.repartir import repartir
 
 
 class Carta:
@@ -19,30 +25,10 @@ class Carta:
         self.valor = valor
         self.tipo = tipo
 
-        # ============================================================
-        # AÑADIDO: nombre del comodín según su valor
-        # ============================================================
-        if tipo == "comodin":
-            nombres = {
-                1: "estrella_galicia",
-                2: "alhambra_verde",
-                3: "estrella_1906",
-                4: "sin_cerveza"
-            }
-            self.nombre = nombres.get(valor, None)
-        else:
-            self.nombre = None
+        asignar_nombre_comodin(self)
 
     def __repr__(self):
-        if self.tipo == "comodin":
-            nombres = {
-                1: "Estrella Galicia",
-                2: "Alhambra Verde",
-                3: "Estrella 1906",
-                4: "SIN CERVEZA"
-            }
-            return f"<Comodín #{self.valor}: {nombres.get(self.valor, 'Desconocido')}>"
-        return f"<Carta {self.valor} de {self.palo}>"
+        return formatear_carta_repr(self)
 
 
 class Baraja:
@@ -64,15 +50,7 @@ class Baraja:
 
     def _crear_baraja(self):
         """Genera las 40 cartas normales y los 4 comodines especiales."""
-
-        # 40 cartas normales
-        for palo in self.PALOS:
-            for valor in self.VALORES:
-                self.cartas.append(Carta(palo, valor, tipo="normal"))
-
-        # 4 comodines numerados 1–4
-        for numero in range(1, 5):
-            self.cartas.append(Carta(None, numero, tipo="comodin"))
+        crear_baraja(self)
 
     # -------------------------
     # MÉTODOS PRINCIPALES
@@ -80,21 +58,15 @@ class Baraja:
 
     def barajar(self):
         """Mezcla las cartas de la baraja."""
-        random.shuffle(self.cartas)
+        barajar(self)
 
     def robar(self):
         """Devuelve la última carta del mazo (o None si está vacío)."""
-        if not self.cartas:
-            return None
-        return self.cartas.pop()
+        return robar(self)
 
     def repartir(self, n_jugadores, cartas_por_jugador=7):
         """
         Reparte cartas a los jugadores.
         Devuelve una lista de manos: [mano_j1, mano_j2, ...]
         """
-        manos = []
-        for _ in range(n_jugadores):
-            mano = [self.robar() for _ in range(cartas_por_jugador)]
-            manos.append(mano)
-        return manos
+        return repartir(self, n_jugadores, cartas_por_jugador)

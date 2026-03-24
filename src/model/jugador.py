@@ -1,37 +1,32 @@
 # src/model/jugador.py
 
+from model.jugador_funcs.inicializar_jugador import inicializar_jugador
+from model.jugador_funcs.recibir_cartas import recibir_cartas
+from model.jugador_funcs.robar_carta import robar_carta
+from model.jugador_funcs.descartar import descartar
+from model.jugador_funcs.sumar_puntos_ronda import sumar_puntos_ronda
+from model.jugador_funcs.fijar_puntos import fijar_puntos
+from model.jugador_funcs.restar_puntos import restar_puntos
+
+
 class Jugador:
     def __init__(self, nombre):
-        self.nombre = nombre
-        self.mano = []
-        self.puntos = 0
-        self.eliminado = False
-
-        # Puntos sumados en la ronda actual
-        self.puntos_ronda = 0
-
-        # Estado de uso de comodines (1–4)
-        self.uso_comodin = {1: False, 2: False, 3: False, 4: False}
+        inicializar_jugador(self, nombre)
 
     def recibir_cartas(self, cartas):
-        self.mano = cartas
+        recibir_cartas(self, cartas)
 
     def robar_carta(self, carta):
-        self.mano.append(carta)
+        robar_carta(self, carta)
 
     def descartar(self, carta):
-        self.mano.remove(carta)
+        descartar(self, carta)
 
     def sumar_puntos_ronda(self, puntos):
-        self.puntos_ronda = puntos
-        self.puntos += puntos
-        if self.puntos >= 100:
-            self.eliminado = True
+        sumar_puntos_ronda(self, puntos)
 
     def fijar_puntos(self, valor):
-        self.puntos = valor
-        if self.puntos >= 100:
-            self.eliminado = True
+        fijar_puntos(self, valor)
 
     def restar_puntos(self, valor):
-        self.puntos = max(0, self.puntos - valor)
+        restar_puntos(self, valor)
