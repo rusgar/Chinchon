@@ -44,3 +44,30 @@ dist/
 .DS_Store
 # Windows
 Thumbs.db
+
+# --- Archivos de editor de texto ---
+*~
+*.bak
+*.tmp
+
+# --- Logs y depuración ---
+*.log
+*.out
+*.err
+
+# --- Config de entorno local (puede ser omitido si prefieres trackear) ---
+.env
+*.env
+
+# --- Dependencias de contenedores / Docker ---
+.envrc
+Dockerfile.*
+.docker/*.yml
+
+# --- Otros ---
+*.sqlite3
+*.db
+
+# --- Mypy / lint ---
+.mypy_cache/
+
