@@ -77,3 +77,25 @@ def test_partida_completa_cierre_mano_valida_y_eliminacion(monkeypatch):
     assert len(juego.jugadores) == 1
     assert juego.jugadores[0].nombre == "PlayerA"
     assert juego.jugadores[0].puntos <= juego.jugadores[0].puntos
+
+
+def test_abandonar_partida_vuelve_menu_y_no_generar_estadisticas(monkeypatch):
+    def limpiar():
+        pass
+
+    def escribir(texto, color=None):
+        pass
+
+    colores = {"rojo": "", "verde": "", "amarillo": "", "cian": "", "reset": ""}
+
+    # Forzar la entrada ABANDONAR en el primer prompt del bucle de partida
+    inputs = iter(["ABANDONAR", ""])  # segunda entrada para la pausa de retorno al menú
+    monkeypatch.setattr("builtins.input", lambda prompt="": next(inputs))
+
+    from ui import iniciar_partida
+
+    resultado, jugadores_finales = iniciar_partida(["Jugador1", "Jugador2"])
+
+    assert resultado == "abandonada"
+    assert jugadores_finales is None
+

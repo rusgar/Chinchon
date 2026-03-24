@@ -338,3 +338,15 @@ y esto se cumple? Validación de jugadas Detecta escaleras, grupos y Chinchón c
 y esto se cumple? Combinación válida Escalera (3+ cartas del mismo palo, valores consecutivos) o grupo (3+ del
 mismo valor)
 Chinchón Cerrar con 7 cartas en una sola combinación (-10 puntos)
+
+🟦 Prompt 92
+ahora quiero que, cuando se abandone la partida, te mande directamente al menu principal, y que las partida abandonadas no cuenten para las estadisticas
+
+🟦 Prompt 93
+ahora quiero que. cuando salga lo de escribir S para cerrar, o enter para seguir, solo me acepte o darle al enter para seguir o la S, da igual mayuscula que minuscula, que no acepte otra cosa
+
+🟦 Prompt 94
+cuando sale el resumen final, me sigue contando las partidas abandonadas como jugadas, quiero que toda partida abandonada no cuente para absolutamente nada
+
+
+🟦 Prompt 95

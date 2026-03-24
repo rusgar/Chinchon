@@ -79,7 +79,7 @@ Contiene funciones del juego Chinchón (17 archivos):
 - `robar_carta.py`: Proceso de robo de cartas
 - `procesar_comodin.py`: Manejo de comodines
 - `avisar_mano_valida.py`: Notificación de validez de mano
-- `preguntar_cierre.py`: Pregunta para cerrar ronda
+- `preguntar_cierre.py`: Pregunta para cerrar ronda (solo acepta ENTER o S/s)
 - `procesar_descarte.py`: Gestión de descartes
 - `avanzar_turno.py`: Cambio de turno
 - `elegir_descartar.py`: Selección de carta a descartar

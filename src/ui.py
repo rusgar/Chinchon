@@ -184,7 +184,7 @@ def _bucle_partida(juego):
                 break
             if entrada.upper() == "ABANDONAR":
                 escribir("\n❌ Partida abandonada por el jugador.", COLORES["rojo"])
-                return None, orden_eliminacion
+                return "abandonada", orden_eliminacion
 
             escribir("Opción inválida. Solo ENTER o ABANDONAR están permitidos.", COLORES["rojo"])
 
@@ -248,8 +248,13 @@ def iniciar_partida(nombres=None):
 
     juego = ChinchonGame(nombres, limpiar_pantalla, escribir, COLORES)
     ganador, orden_eliminacion = _bucle_partida(juego)
-    _mostrar_resumen_final(ganador, orden_eliminacion)
 
+    if ganador == "abandonada":
+        escribir("\n🔙 Volviendo al menú principal...", COLORES["amarillo"])
+        input("Presiona ENTER para continuar...")
+        return "abandonada", None
+
+    _mostrar_resumen_final(ganador, orden_eliminacion)
     return ganador, juego.todos_jugadores
 
 
@@ -328,6 +333,12 @@ def menu_principal_loop():
         opcion = leer_opcion()
 
         if opcion == "1":
+            # Variables de sesión para esta ronda de partidas consecutivas
+            partidas_sesion = 0
+            victorias_sesion = {}
+            puntuaciones_sesion = {}
+            abandono_en_sesion = False
+
             # Bucle de partidas consecutivas con los mismos jugadores
             while True:
                 # Si hay jugadores de la última partida, usarlos automáticamente
@@ -338,25 +349,43 @@ def menu_principal_loop():
                     if jugadores_finales:
                         ultimos_jugadores = [j.nombre for j in jugadores_finales]
 
-                # Incrementar partidas jugadas
-                partidas_jugadas += 1
+                # Si la partida fue abandonada, marcar y salir
+                if ganador == "abandonada":
+                    abandono_en_sesion = True
+                    break
 
-                # Registrar victoria y puntuaciones
+                # Incrementar partidas de sesión
+                partidas_sesion += 1
+
+                # Registrar victoria y puntuaciones en sesión
                 if jugadores_finales:
                     for jugador in jugadores_finales:
-                        # Acumular puntos totales
-                        puntuaciones_totales[jugador.nombre] = puntuaciones_totales.get(jugador.nombre, 0) + jugador.puntos
+                        # Acumular puntos totales en sesión
+                        puntuaciones_sesion[jugador.nombre] = puntuaciones_sesion.get(jugador.nombre, 0) + jugador.puntos
 
                 if ganador:
-                    victorias[ganador.nombre] = victorias.get(ganador.nombre, 0) + 1
+                    victorias_sesion[ganador.nombre] = victorias_sesion.get(ganador.nombre, 0) + 1
 
                 # Preguntar si quiere jugar otra partida
                 if _preguntar_jugar_otra_partida():
                     # Continuar el bucle (jugamos otra partida con los mismos jugadores)
                     continue
                 else:
-                    # Salir del bucle de partidas y volver al menú principal
+                    # Salir del bucle de partidas
                     break
+
+            # Si no hubo abandono en la sesión, acumular estadísticas globales
+            # Si hubo abandono, resetear todas las estadísticas globales
+            if abandono_en_sesion:
+                partidas_jugadas = 0
+                victorias = {}
+                puntuaciones_totales = {}
+            else:
+                partidas_jugadas += partidas_sesion
+                for nombre, wins in victorias_sesion.items():
+                    victorias[nombre] = victorias.get(nombre, 0) + wins
+                for nombre, puntos in puntuaciones_sesion.items():
+                    puntuaciones_totales[nombre] = puntuaciones_totales.get(nombre, 0) + puntos
 
         elif opcion == "2":
             _mostrar_archivo_documentacion("docs/resumen_basico.md")
