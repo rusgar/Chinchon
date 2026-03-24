@@ -348,5 +348,5 @@ ahora quiero que. cuando salga lo de escribir S para cerrar, o enter para seguir
 🟦 Prompt 94
 cuando sale el resumen final, me sigue contando las partidas abandonadas como jugadas, quiero que toda partida abandonada no cuente para absolutamente nada
 
-
 🟦 Prompt 95
+testeame todo el codigo, en busca de bugs, vulnerabilidades y fallos
