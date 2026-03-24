@@ -350,3 +350,8 @@ cuando sale el resumen final, me sigue contando las partidas abandonadas como ju
 
 🟦 Prompt 95
 testeame todo el codigo, en busca de bugs, vulnerabilidades y fallos
+
+# A PETICION DE EDU
+conociendo todo mi preoyecto, creame un archivo dentro de ci.yml
+
+Le di los errores que me salian, para que me los corrigiese

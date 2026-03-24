@@ -42,4 +42,4 @@ jobs:
 
     - name: Type check with mypy
       run: |
-        mypy src/
+        mypy --config-file mypy.ini src/
