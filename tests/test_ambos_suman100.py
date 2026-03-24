@@ -6,10 +6,10 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
 
-from chinchon import ChinchonGame
-from jugador import Jugador
-from baraja import Baraja
-from comodines import activar_comodin
+from game.chinchon import ChinchonGame
+from model.jugador import Jugador
+from model.carta import Baraja, Carta
+from effects.comodines import activar_comodin
 import pytest
 
 
@@ -46,7 +46,7 @@ def test_ambos_superan_100_menos_puntos_gana():
 
     # Crear cartas con valores altos para sumar > 100 puntos
     # Usamos cartas normales: valor 12 (Sota) = 12 puntos cada una
-    from baraja import Carta
+    from model.carta import Carta
     cartas_j1 = [Carta("oros", 12) for _ in range(9)]  # 9 * 12 = 108 puntos
     cartas_j2 = [Carta("copas", 12) for _ in range(10)]  # 10 * 12 = 120 puntos
 
@@ -85,7 +85,7 @@ def test_ambos_superan_100_con_exactamente_100():
 
     juego = ChinchonGame(nombres, limpiar, escribir, colores)
 
-    from baraja import Carta
+    from model.carta import Carta
     # JugadorA: 100 puntos exactos (8 cartas de 12 = 96, + 1 carta de 4 = 100)
     cartas_j1 = [Carta("oros", 12) for _ in range(8)] + [Carta("oros", 4)]
     # JugadorB: 105 puntos (9 cartas de 12 = 108, pero necesitamos 105, usamos 7*12=84 + 3*7=21 = 105)
@@ -121,7 +121,7 @@ def test_solo_uno_supera_100_se_elimina_al_superador():
 
     juego = ChinchonGame(nombres, limpiar, escribir, colores)
 
-    from baraja import Carta
+    from model.carta import Carta
     # JugadorX: 90 puntos (7 cartas de 12 = 84, + 1 carta de 6 = 90)
     cartas_j1 = [Carta("oros", 12) for _ in range(7)] + [Carta("oros", 6)]
     # JugadorY: 110 puntos (9 cartas de 12 = 108, + 1 carta de 2 = 110)
@@ -155,7 +155,7 @@ def test_tres_jugadores_todos_superan_100():
 
     juego = ChinchonGame(nombres, limpiar, escribir, colores)
 
-    from baraja import Carta
+    from model.carta import Carta
     # Jugador A: 115 puntos (9 cartas de 12 = 108, + 1 carta de 7 = 115)
     cartas_a = [Carta("oros", 12) for _ in range(9)] + [Carta("oros", 7)]
     # Jugador B: 105 puntos (8 cartas de 12 = 96, + 1 carta de 9 = 105)

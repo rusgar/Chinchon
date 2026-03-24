@@ -11,8 +11,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "s
 
 # ============================================================
 
-from jugador import Jugador
-from comodines import activar_comodin
+from model.jugador import Jugador
+from effects.comodines import activar_comodin
 import pytest
 
 

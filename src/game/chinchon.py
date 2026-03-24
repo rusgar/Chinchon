@@ -154,8 +154,13 @@ class ChinchonGame:
         # 2. PROCESAR COMODÍN (si corresponde)
         if carta_robada.tipo == "comodin":
             resultado = self._procesar_comodin(jugador, carta_robada)
+            # Si el jugador fue eliminado por el comodín, terminar turno sin avanzar (ya se ajustó en _procesar_comodin)
+            if jugador.eliminado:
+                return resultado if resultado in ["fin", "ganador"] else "continuar"
+            # Si el juego terminó, devolver resultado
             if resultado in ["fin", "ganador"]:
                 return resultado
+            # Si el jugador sobrevivió y el juego continúa, seguir con el turno normal
 
         # 3. AVISAR SOBRE LA MANO
         self._avisar_mano_valida(jugador)
@@ -167,13 +172,17 @@ class ChinchonGame:
         # 5. DESCARTAR
         self._procesar_descarte(jugador)
 
-        # 6. AVANZAR TURNO
-        self._avanzar_turno()
+        # 6. AVANZAR TURNO (solo si el jugador no fue eliminado durante su turno)
+        if not jugador.eliminado:
+            self._avanzar_turno()
         return "continuar"
 
     def _procesar_comodin(self, jugador, carta):
         """Procesa el efecto de un comodín y devuelve 'fin' si no quedan jugadores."""
         activar_comodin(jugador, carta, self.limpiar, self.escribir, self.colores)
+
+        # Guardar el índice del jugador actual antes de filtrar
+        indice_actual = self.turno_actual
 
         # Eliminar jugadores que hayan sido eliminados por el comodín
         self.jugadores = [j for j in self.jugadores if not j.eliminado]
@@ -182,9 +191,17 @@ class ChinchonGame:
         if len(self.jugadores) == 0:
             return "fin"
 
-        # Ajustar turno si es necesario
-        if self.turno_actual >= len(self.jugadores):
-            self.turno_actual = 0
+        # Ajustar turno: si el jugador actual fue eliminado, avanzar al siguiente vivo
+        if jugador.eliminado:
+            # El turno actual ya no existe en la lista filtrada, hay que recalcular
+            # Mantenemos el mismo índice si es posible, si no, volvemos a 0
+            if indice_actual >= len(self.jugadores):
+                self.turno_actual = 0
+            # Si el jugador actual sigue vivo (no fue eliminado), el turno se mantiene
+        else:
+            # Ajustar turno si es necesario (porque se eliminaron jugadores anteriores)
+            if self.turno_actual >= len(self.jugadores):
+                self.turno_actual = 0
 
         # Si solo queda uno → fin
         if len(self.jugadores) == 1:
@@ -310,6 +327,8 @@ class ChinchonGame:
         # CASO ESPECIAL: TODOS LOS JUGADORES ELIMINADOS
         if len(self.jugadores) == 0:
             ganador = min(jugadores_antes, key=lambda x: x.puntos)
+            # Restaurar al ganador y marcar como NO eliminado
+            ganador.eliminado = False
             self.jugadores = [ganador]
             self.escribir("\n⚠️ TODOS LOS JUGADORES SUPERARON 100 PUNTOS", self.colores["amarillo"])
             self.escribir(f"🏆 GANADOR POR MENOR PUNTUACIÓN: {ganador.nombre}", self.colores["verde"])

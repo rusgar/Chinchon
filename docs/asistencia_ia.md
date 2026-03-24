@@ -271,3 +271,52 @@ si pofavor
 🟦 Prompt 71
 completame el archivo readme, siguiendo la estructura que tiene
 
+🟦 Prompt 72
+ahora, tengo 2 archivos de cada, como por ejemplo tengo el archivo chinchon.py que esta en src, y el arcivo chinchon.py que esta en la carpeta de src/game. eliminame el que no me haga falta
+( aqui al realizar los test despues de eliminar los archivos, me los volvio a crear porque las rutas de los test no coincidian con los archivos originales, a si que pare la ejecucion)
+
+🟦 Prompt 73
+si los test no pasan, modificalos para que ahora que los archivos esten dentro de las carpetas, pasen
+
+🟦 Prompt 74
+hay fallos cuando ejecuto el codigo, en mitad de una partida, se supone que tendria que ganar o perder, hay veces que funciona, pero otras se queda en el turno de otro jugador, dice de darle al enter para robar carta y no hace nada, se queda ahi pillado
+
+🟦 Prompt 75
+ahora, cuando aparece el mensaje de jugar otra partida, al darle a si, quiero que directamente empiece la partida con los mismos integrantes que se pusieron al ejecutar la partida
+
+🟦 Prompt 76
+sigue mandandome al menu, quiero que al acabar la partida, al darle a que quiero jugar otra partida, no pase por este menu, si no que simplemente se inicie otra partida
+
+
+🟦 Prompt 77
+vale, ahora añademe una opcion, que aparezca en mitad de partida, que sea para acabar la partida en mitad de ronda, para que esto ocurra, te salda un mensaje en pantalla que te pondra: "Escribe ABANDONAR para salir de la partida"
+
+
+🟦 Prompt 78
+vale, ahora quiero que, en la opcion de pulsar enter para robar carta, solo puedas pulsar enter, porque si yo por ejemplo escribo "ejemplo" y le doy al enter lo reconoce, solo y no quiero que esto pase, que si hay texto o caracteres, diga opcion invalida
+
+🟦 Prompt 79
+
+
+🟦 Prompt 80
+
+
+🟦 Prompt 81
+
+
+🟦 Prompt 82
+
+
+🟦 Prompt 83
+
+
+🟦 Prompt 84
+
+
+🟦 Prompt 85
+
+
+🟦 Prompt 86
+
+
+🟦 Prompt 87

@@ -177,7 +177,16 @@ def _bucle_partida(juego):
         print(f"Turno de {jugador.nombre}\n")
         mostrar_mano(jugador)
 
-        input("Pulsa ENTER para robar carta...")
+        while True:
+            escribir("Escribe ABANDONAR para salir de la partida", COLORES["amarillo"])
+            entrada = input("Pulsa ENTER para robar carta...").strip()
+            if entrada == "":
+                break
+            if entrada.upper() == "ABANDONAR":
+                escribir("\n❌ Partida abandonada por el jugador.", COLORES["rojo"])
+                return None, orden_eliminacion
+
+            escribir("Opción inválida. Solo ENTER o ABANDONAR están permitidos.", COLORES["rojo"])
 
         resultado = juego.jugar_turno()
 
@@ -221,16 +230,21 @@ def _mostrar_resumen_final(ganador, orden_eliminacion):
     input("\nPresiona ENTER para continuar...")
 
 
-def iniciar_partida():
-    """Función principal para iniciar y ejecutar una partida completa."""
+def iniciar_partida(nombres=None):
+    """Función principal para iniciar y ejecutar una partida completa.
+
+    Args:
+        nombres: Lista de nombres de jugadores. Si es None, se piden por consola.
+    """
     from game.chinchon import ChinchonGame
 
     limpiar_pantalla()
     imprimir_titulo()
 
-    nombres = _recoger_nombres_jugadores()
     if nombres is None:
-        return None, None
+        nombres = _recoger_nombres_jugadores()
+        if nombres is None:
+            return None, None
 
     juego = ChinchonGame(nombres, limpiar_pantalla, escribir, COLORES)
     ganador, orden_eliminacion = _bucle_partida(juego)
@@ -301,6 +315,7 @@ def menu_principal_loop():
     partidas_jugadas = 0
     victorias = {}  # {nombre_jugador: partidas_ganadas}
     puntuaciones_totales = {}  # {nombre_jugador: puntos_acumulados}
+    ultimos_jugadores = None  # Guardar nombres de la última partida
 
     while True:
         limpiar_pantalla()
@@ -313,27 +328,35 @@ def menu_principal_loop():
         opcion = leer_opcion()
 
         if opcion == "1":
-            ganador, jugadores_finales = iniciar_partida()
+            # Bucle de partidas consecutivas con los mismos jugadores
+            while True:
+                # Si hay jugadores de la última partida, usarlos automáticamente
+                if ultimos_jugadores:
+                    ganador, jugadores_finales = iniciar_partida(ultimos_jugadores)
+                else:
+                    ganador, jugadores_finales = iniciar_partida()
+                    if jugadores_finales:
+                        ultimos_jugadores = [j.nombre for j in jugadores_finales]
 
-            # Incrementar partidas jugadas
-            partidas_jugadas += 1
+                # Incrementar partidas jugadas
+                partidas_jugadas += 1
 
-            # Registrar victoria y puntuaciones
-            if jugadores_finales:
-                for jugador in jugadores_finales:
-                    # Acumular puntos totales
-                    puntuaciones_totales[jugador.nombre] = puntuaciones_totales.get(jugador.nombre, 0) + jugador.puntos
+                # Registrar victoria y puntuaciones
+                if jugadores_finales:
+                    for jugador in jugadores_finales:
+                        # Acumular puntos totales
+                        puntuaciones_totales[jugador.nombre] = puntuaciones_totales.get(jugador.nombre, 0) + jugador.puntos
 
-            if ganador:
-                victorias[ganador.nombre] = victorias.get(ganador.nombre, 0) + 1
+                if ganador:
+                    victorias[ganador.nombre] = victorias.get(ganador.nombre, 0) + 1
 
-            # Preguntar si quiere jugar otra partida
-            if _preguntar_jugar_otra_partida():
-                continue
-            else:
-                # Mostrar resumen completo
-                _mostrar_resumen_final_partidas(partidas_jugadas, victorias, puntuaciones_totales)
-                break
+                # Preguntar si quiere jugar otra partida
+                if _preguntar_jugar_otra_partida():
+                    # Continuar el bucle (jugamos otra partida con los mismos jugadores)
+                    continue
+                else:
+                    # Salir del bucle de partidas y volver al menú principal
+                    break
 
         elif opcion == "2":
             _mostrar_archivo_documentacion("docs/resumen_basico.md")
