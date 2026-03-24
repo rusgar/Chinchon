@@ -332,6 +332,9 @@ se cumple esto?: Por cada comodín no usado, el ganador recibe –5 puntos. ( me
 creame un test, solo para testear eso
 
 🟦 Prompt 90
-
+y esto se cumple? Validación de jugadas Detecta escaleras, grupos y Chinchón correctamente
 
 🟦 Prompt 91
+y esto se cumple? Combinación válida Escalera (3+ cartas del mismo palo, valores consecutivos) o grupo (3+ del
+mismo valor)
+Chinchón Cerrar con 7 cartas en una sola combinación (-10 puntos)
