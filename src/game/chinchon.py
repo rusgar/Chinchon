@@ -1,9 +1,9 @@
-# src/chinchon.py
+# src/game/chinchon.py
 
-from baraja import Baraja
-from jugador import Jugador
-from comodines import activar_comodin
-from validador import detectar_grupos, detectar_escaleras, _filtrar_normales
+from model.carta import Baraja
+from model.jugador import Jugador
+from effects.comodines import activar_comodin
+from validation.validador import detectar_grupos, detectar_escaleras, _filtrar_normales
 
 
 # ============================================================
@@ -70,7 +70,7 @@ class ChinchonGame:
             self.turno_actual = 0
 
     # ============================================================
-    # ROBAR DEL MAZO O DEL DESCARTE
+    # ROBAR DEL MAZO O DEL DESCARTES
     # ============================================================
 
     def _robar_carta(self, jugador):
@@ -364,7 +364,7 @@ class ChinchonGame:
         return f"{letra} {emoji}"
 
     # ============================================================
-    # GANADOR REAL
+    # DETECTAR GANADOR
     # ============================================================
 
     def detectar_ganador(self):

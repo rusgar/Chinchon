@@ -1,0 +1,6 @@
+# Requisitos del proyecto
+# Este proyecto solo utiliza la biblioteca estándar de Python 3.x
+# No se requieren paquetes externos
+
+# Para ejecutar el juego:
+# python src/ui.py

@@ -79,4 +79,106 @@ Nº	Cerveza	Efecto	Condición	Resultado
 📝 Regla adicional
 Al final de la partida:
 
-Por cada comodín no usado, el ganador recibe –5 puntos. 
+Por cada comodín no usado, el ganador recibe –5 puntos.
+
+---
+
+🚀 Cómo Ejecutar el Juego
+1. Asegúrate de tener Python 3.8+ instalado.
+2. Navega al directorio del proyecto:
+   ```bash
+   cd Chinchon
+   ```
+3. Ejecuta el juego:
+   ```bash
+   python src/ui.py
+   ```
+4. Sigue las instrucciones en el menú.
+
+📦 Requisitos
+- Python 3.8 o superior
+- No se requieren paquetes externos (solo biblioteca estándar)
+
+Para instalar dependencias (si las hubiera):
+```bash
+pip install -r requirements.txt
+```
+
+🧪 Testing
+El proyecto incluye tests unitarios con pytest. Para ejecutarlos:
+
+```bash
+python -m pytest tests/ -v
+```
+
+Tests incluidos:
+- `test_ambos_suman100.py`: Casos donde ambos jugadores superan 100 puntos
+- `test_comodines.py`: Tests para los 4 comodines especiales
+
+Todos los tests deben pasar ✅
+
+📁 Estructura del Proyecto
+```
+Chinchon/
+├── src/
+│   ├── model/           # Entidades de datos (Carta, Baraja, Jugador)
+│   ├── game/            # Lógica principal del juego (ChinchonGame)
+│   ├── validation/      # Validación de manos y combinaciones
+│   ├── effects/         # Comodines y animaciones
+│   └── ui.py            # Interfaz de usuario (terminal)
+├── tests/               # Tests unitarios
+├── docs/                # Documentación adicional
+│   ├── reglas.md
+│   ├── resumen_basico.md
+│   ├── puntuaciones_demo.md
+│   └── creditos.md
+├── requirements.txt
+├── .gitignore
+└── Readme.md
+
+🔧 Desarrollo Modular
+El proyecto está diseñado con una arquitectura modular:
+
+- **Model**: Clases de datos independientes
+- **Game**: Reglas y flujo del juego
+- **Validation**: Lógica de combinaciones válidas
+- **Effects**: Comodines y efectos visuales
+- **UI**: Presentación y entrada de usuario
+
+Esta separación facilita:
+- Mantenimiento del código
+- Testing unitario
+- Futuras extensiones
+- Colaboración en equipo
+
+📝 Convenciones de Código
+- Seguimos PEP 8 (estilo Python)
+- Docstrings en todas las funciones y clases
+- Funciones pequeñas y con responsabilidad única
+- Nombres en snake_case para funciones/variables
+- Nombres en PascalCase para clases
+
+🤝 Contribuciones
+¡Bienvenidas! Para contribuir:
+
+1. Haz fork del repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/nueva-feature`)
+3. Commit tus cambios (`git commit -m 'Add: nueva feature'`)
+4. Push a la rama (`git push origin feature/nueva-feature`)
+5. Abre un Pull Request describiendo los cambios
+
+Asegúrate de que todos los tests pasan antes de enviar PR.
+
+📜 Licencia
+Este proyecto es de código abierto. Siéntete libre de usarlo, modificarlo y compartirlo.
+
+Atribuciones:
+- Código creado por Ralfy8 con asistencia de IA
+- Idea original por RusGar
+
+📞 Contacto
+Para preguntas, sugerencias o colaboraciones, contacta con el autor.
+
+---
+
+**¡Disfruta del juego de Chinchón con Comodines de Cerveza! 🍺🃏** 

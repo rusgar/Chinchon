@@ -223,3 +223,51 @@ ahora quiero que cuando acabe la partida, me añadas la opcion de jugar otra par
 
 🟦 Prompt 56
 ahora en asistencia_ia, quiero que lo continues desde el ultimo promt hasta este ultimo que te he dado
+
+🟦 Prompt 57
+ahora, cuando quiero ver las reglas, me sale reglas proximamente. pulso enter y me devuelve al inicio
+
+🟦 Prompt 58
+ahora, cuando quiero ver las reglas, me sale reglas proximamente. pulso enter y me devuelve al inicio (me creo el archivo reglas.md, me parecio buen archivo a si que decidi dejarlo)
+
+🟦 Prompt 59
+pero me refiero a cuando ejecuto el programa, al intentar ver las reglas basicas, me sale que las reglas estaran proximamente, arreglalo para que cuando elijo esa opcion, me salgan las reglas basicas
+
+🟦 Prompt 60
+pero quiero que me pongas las reglas basicas, no todas, hazme un archivo .md que sea resumen_basico.md y en el resumeme en 5,6 lineas el contendo de reglas.md, para que aparezca en pantalla cuando entre en la opcion de reglas
+
+🟦 Prompt 61
+ahora quiero que en el menu cuando elija la opcion de creditos, me salga en pantalla el texto que hay dentro de creditos.md
+
+🟦 Prompt 62
+ahora quiero que me crees una tabla de puntuacion ( demo) es decir un pequeño ejemplo de cuanto puntuarias, dependiendo de tus cartas, cuando elija la opcion 4 dentro del programa
+
+🟦 Prompt 63
+ahora quiero que, me rellenes el arvico requirements.txt, con lo necesario para ejecutar este programa
+
+🟦 Prompt 64
+ahora lee y modifica el archivo .gitignore con lo que sea necesario (cosa que no modifico nada, porque ya estaba completo)
+
+🟦 Prompt 65
+ahora quiero que, cuando ves las cartas en pantalla, no estan bien alineadas, haz lo que tengas que hacer, pero quiero que todas las cartas cuando esten en pantalla esten alineadas
+
+🟦 Prompt 66
+las cartas, con los numeros, siguen sin estar bien alineadas, hay numeros que se salen de la carta, solucionalo
+
+🟦 Prompt 67
+ahora quiero que, cuando una persona gane, no se vaya directamente a jugar otra partida, quiero que salga quien ha ganado la partida, y el orden de las personas que han sido eliminadas, es decir que jugador fue el primero en ser eliminado. y que solo pueda darle al enter para pasar esta pantalla, luego ya despues de darle al enter que me salga lo de jugar otra partida
+
+🟦 Prompt 68
+Refactorizar para mayor modularidad, sin que falle nada, se mantengas todas las opciones que hay, y que no de ningun error, y que los test sigan pasando
+
+🟦 Prompt 69
+lo has modularizado todo el proyecto? ( a lo cual me respondio que si lo queria organizar en mas carpetas)
+
+"¿Te gustaría que además cree una estructura de carpetas tipo model/, game/, ui/, validation/ para mayor organización física?"
+
+🟦 Prompt 70
+si pofavor
+
+🟦 Prompt 71
+completame el archivo readme, siguiendo la estructura que tiene
+
